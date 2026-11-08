@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Análise de Cláusulas</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background-color: #4a0610; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; box-sizing: border-box; }
+        .sidebar-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .logo-container { margin-bottom: 30px; display: flex; justify-content: center; width: 100%; text-align: center; }
+        .logo-img { max-width: 110px; height: auto; }
+        .menu-items { width: 100%; display: flex; flex-direction: column; }
+        .menu-link { padding: 12px 25px; color: #ffffff; text-decoration: none; font-size: 15px; display: block; }
+        .menu-link:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .menu-link.active { background-color: #b0712a; font-weight: 600; border-radius: 8px; margin: 0 12px; padding: 12px 13px; }
+        .sidebar-footer { text-align: center; font-size: 11px; color: #c49ba2; padding: 0 20px; }
+        .btn-sair { background-color: #92000a; color: white; text-align: center; padding: 10px; margin: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: block; }
+        .btn-sair:hover { background-color: #b3000d; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #f9fafb; overflow-y: auto; }
+        .top-bar { background-color: #ffffff; padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; }
+        .top-bar h1 { margin: 0; font-size: 22px; color: #4a0610; font-weight: 700; }
+        .user-section { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #6b7280; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        .page-body { padding: 35px; box-sizing: border-box; }
+        .section-title { font-size: 24px; color: #111827; margin: 0 0 8px 0; font-weight: 700; }
+        .section-subtitle { color: #6b7280; font-size: 14px; margin: 0 0 30px 0; }
+        .workspace { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+        .white-panel { background-color: #ffffff; border-radius: 12px; padding: 26px; border: 1px solid #e5e7eb; }
+        .white-panel h3 { margin: 0 0 20px 0; color: #b0712a; font-size: 18px; font-weight: 700; }
+        label { display: block; font-size: 14px; font-weight: 600; color: #374151; margin-top: 14px; }
+        textarea { width: 100%; padding: 12px; margin-top: 6px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 14px; }
+        .action-container { display: flex; gap: 10px; margin-top: 24px; }
+        .btn { padding: 10px 20px; font-size: 14px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; }
+        .btn-gold { background-color: #b0712a; color: white; }
+        .btn-grey { background-color: #6b7280; color: white; }
+        .preview-box { border: 1px solid #e5e7eb; border-radius: 6px; padding: 16px; background-color: #ffffff; min-height: 260px; font-size: 14px; color: #4b5563; line-height: 1.6; white-space: pre-wrap; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container"><img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo"></div>
+            <div class="menu-items">
+                <a href="{% url 'painel' %}" class="menu-link">Painel</a>
+                <a href="{% url 'gerar_contratos' %}" class="menu-link">Gerar Contratos</a>
+                <a href="{% url 'historico_contratos' %}" class="menu-link">Histórico de Contratos</a>
+                <a href="{% url 'analise_clausulas' %}" class="menu-link active">Análise de Cláusulas</a>
+                <a href="{% url 'consulta_legislativa' %}" class="menu-link">Consulta Legislativa</a>
+                <a href="{% url 'assistente_juridico' %}" class="menu-link">Assistente Jurídico</a>
+                <a href="{% url 'configuracoes' %}" class="menu-link">Configurações</a>
+            </div>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn-sair">Sair</button></form>
+            <div class="sidebar-footer">Legalize © 2026<br/>Todos os direitos reservados</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Análise de Cláusulas</h1>
+            <div class="user-section">Olá, {{ user.username }} <div class="avatar">👤</div></div>
+        </div>
+
+        <div class="page-body">
+            <h2 class="section-title">Analise suas cláusulas</h2>
+            <p class="section-subtitle">Cole uma cláusula para receber uma análise preliminar.</p>
+
+            <form method="POST" class="workspace">
+                {% csrf_token %}
+                <div class="white-panel">
+                    <h3>Enviar cláusula</h3>
+                    <label>Texto da cláusula</label>
+                    <textarea name="clausula_texto" rows="6" placeholder="Cole a cláusula aqui..."></textarea>
+
+                    <div class="action-container">
+                        <button type="submit" class="btn btn-gold">Analisar</button>
+                        <a href="{% url 'painel' %}" class="btn btn-grey">Voltar</a>
+                    </div>
+                </div>
+
+                <div class="white-panel" style="display: flex; flex-direction: column;">
+                    <h3>Resultado</h3>
+                    <div class="preview-box">{% if resultado %}{{ resultado }}{% else %}A análise aparecerá aqui após você enviar o texto.{% endif %}</div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</body>
+</html>

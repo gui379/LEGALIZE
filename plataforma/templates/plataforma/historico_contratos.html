@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Histórico de Contratos</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background-color: #4a0610; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; flex-shrink: 0; box-sizing: border-box; }
+        .sidebar-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .logo-container { margin-bottom: 30px; display: flex; justify-content: center; width: 100%; }
+        .logo-img { max-width: 110px; height: auto; }
+        .menu-items { width: 100%; display: flex; flex-direction: column; }
+        .menu-link { padding: 12px 25px; color: #ffffff; text-decoration: none; font-size: 15px; display: block; }
+        .menu-link:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .menu-link.active { background-color: #b0712a; font-weight: 600; border-radius: 8px; margin: 0 12px; padding: 12px 13px; }
+        .sidebar-footer { text-align: center; font-size: 11px; color: #c49ba2; padding: 0 20px; }
+        .btn-sair { background-color: #92000a; color: white; text-align: center; padding: 10px; margin: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: block; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #f9fafb; overflow-y: auto; }
+        .top-bar { background-color: #ffffff; padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; box-sizing: border-box; }
+        .top-bar h1 { margin: 0; font-size: 22px; color: #4a0610; font-weight: 700; }
+        .user-section { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #6b7280; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        .page-body { padding: 35px; box-sizing: border-box; }
+        .white-panel { background: white; border-radius: 12px; border: 1px solid #e5e7eb; padding: 26px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); margin-bottom: 30px; }
+        .white-panel h3 { margin-top: 0; color: #4a0610; font-size: 16px; margin-bottom: 15px; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
+
+        .history-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+        .history-table th { background-color: #f9fafb; padding: 14px; color: #4a0610; font-weight: 700; border-bottom: 2px solid #e5e7eb; }
+        .history-table td { padding: 14px; border-bottom: 1px solid #e5e7eb; color: #374151; }
+
+        .btn-action { text-decoration: none; font-size: 12px; font-weight: bold; padding: 6px 12px; border-radius: 4px; border: none; cursor: pointer; display: inline-block; }
+        .btn-edit { background: #b0712a; color: white; }
+        .btn-trash { background: #92000a; color: white; margin-left: 5px; }
+        .btn-restore { background: #03543f; color: white; }
+
+        /* Estilização Manual do Modal Invisível de Justificativa */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-card { background: white; padding: 25px; border-radius: 10px; width: 450px; box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+        .modal-card h4 { margin-top: 0; color: #4a0610; font-size: 16px; }
+        .modal-card textarea { width: 100%; padding: 10px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; margin-top: 10px; font-size: 14px; resize: none; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 15px; }
+    </style>
+    <script>
+        // Disparador de Justificativa por Modal antes do descarte (Questão 1)
+        function abrirModalExclusao(id) {
+            document.getElementById('modal_contrato_id').value = id;
+            document.getElementById('modal_justificativa').style.display = 'flex';
+        }
+        function fecharModalExclusao() {
+            document.getElementById('modal_justificativa').style.display = 'none';
+            document.getElementById('justificativa_input').value = "";
+        }
+    </script>
+</head>
+<body>
+
+    <!-- CAIXA DO MODAL DE JUSTIFICATIVA (Questão 1) -->
+    <div id="modal_justificativa" class="modal-overlay">
+        <div class="modal-card">
+            <h4>Justificativa de Exclusão Obrigatória</h4>
+            <p style="font-size: 13px; color: #4b5563; margin: 0;">Por motivos de auditoria jurídica, informe detalhadamente a razão do descarte da minuta antes de enviá-la para a lixeira temporal:</p>
+            <form method="POST">
+                {% csrf_token %}
+                <input type="hidden" id="modal_contrato_id" name="contrato_id" value="" />
+                <textarea id="justificativa_input" name="justificativa_texto" rows="4" placeholder="Escreva aqui o motivo..." required></textarea>
+                <div class="modal-actions">
+                    <button type="button" class="btn-action" style="background:#6b7280; color:white;" onclick="fecharModalExclusao()">Cancelar</button>
+                    <button type="submit" name="enviar_lixeira" class="btn-action" style="background:#92000a; color:white;">Mover para Lixeira</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container"><img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo" /></div>
+            <div class="menu-items">
+                <a href="{% url 'painel' %}" class="menu-link">Painel</a>
+                <a href="{% url 'gerar_contratos' %}" class="menu-link">Gerar Contratos</a>
+                <a href="{% url 'historico_contratos' %}" class="menu-link active">Histórico de Contratos</a>
+                <a href="{% url 'analise_clausulas' %}" class="menu-link">Análise de Cláusulas</a>
+                <a href="{% url 'consulta_legislativa' %}" class="menu-link">Consulta Legislativa</a>
+                <a href="{% url 'assistente_juridico' %}" class="menu-link">Assistente Jurídico</a>
+                <a href="{% url 'configuracoes' %}" class="menu-link">Configurações</a>
+            </div>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn-sair">Sair</button></form>
+            <div class="sidebar-footer">Legalize © 2026<br/>Todos os direitos reservados</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Histórico de Contratos</h1>
+            <div class="user-section">Olá, {{ user.username }} <div class="avatar">👤</div></div>
+        </div>
+
+        <div class="page-body">
+            <!-- TABELA 1: Histórico de Documentos Ativos -->
+            <div class="white-panel">
+                <h3>📜 Minutas Contratuais Ativas</h3>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Modelo / Segmento</th>
+                            <th>Contratante</th>
+                            <th>Contratado</th>
+                            <th>Emissão</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if contratos_salvos %}
+                            {% for contrato in contratos_salvos %}
+                                <tr>
+                                    <td><b>Nº {{ contrato.numero_contrato }}/{{ contrato.ano_contrato }}</b></td>
+                                    <td>{{ contrato.sub_segmento }}</td>
+                                    <td>{{ contrato.parte_a }}</td>
+                                    <td>{{ contrato.parte_b }}</td>
+                                    <td>{{ contrato.data|date:"d/m/Y" }}</td>
+                                    <td>
+                                        <a href="{% url 'gerar_contratos' %}?editar_id={{ contrato.id }}" class="btn-action btn-edit">Editar ✏️</a>
+                                        <button type="button" class="btn-action btn-trash" onclick="abrirModalExclusao('{{ contrato.id }}')">Descartar 🗑️</button>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="6" style="text-align: center; color: #6b7280; padding: 15px;">Nenhum documento ativo localizado.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- TABELA 2: Lixeira Segura de 30 dias (Questão 1) -->
+            <div class="white-panel" style="border-color: #fca5a5;">
+                <h3 style="color: #92000a; border-bottom-color: #fee2e2;">🗑️ Lixeira Temporal (Remoção Definitiva em 30 dias)</h3>
+                <table class="history-table">
+                    <thead>
+                        <tr>
+                            <th>Identificador</th>
+                            <th>Modelo / Segmento</th>
+                            <th>Justificativa de Descarte</th>
+                            <th>Dias Restantes</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if contratos_lixeira %}
+                            {% for contrato in contratos_lixeira %}
+                                <tr>
+                                    <td><b>Nº {{ contrato.numero_contrato }}/{{ contrato.ano_contrato }}</b></td>
+                                    <td>{{ contrato.sub_segmento }}</td>
+                                    <td style="color: #6b7280; font-style: italic; max-width: 300px;">"{{ contrato.justificativa_exclusao }}"</td>
+                                    <td style="color: #b91c1c; font-weight: 700;">{{ contrato.dias_restantes }} dias</td>
+                                    <td>
+                                        <form method="POST" style="display:inline;">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="contrato_id" value="{{ contrato.id }}" />
+                                            <button type="submit" name="restaurar_lixeira" class="btn-action btn-restore">Restaurar ↩️</button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr>
+                                <td colspan="5" style="text-align: center; color: #6b7280; padding: 15px;">Lixeira vazia.</td>
+                            </tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

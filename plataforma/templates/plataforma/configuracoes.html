@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Configurações Profissionais</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
+
+        .sidebar { width: 250px; background-color: #4a0610; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; box-sizing: border-box; flex-shrink: 0; }
+        .sidebar-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .logo-container { margin-bottom: 30px; display: flex; justify-content: center; width: 100%; text-align: center; }
+        .logo-img { max-width: 110px; height: auto; }
+        .menu-items { width: 100%; display: flex; flex-direction: column; }
+        .menu-link { padding: 12px 25px; color: #ffffff; text-decoration: none; font-size: 15px; display: block; }
+        .menu-link:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .menu-link.active { background-color: #b0712a; font-weight: 600; border-radius: 8px; margin: 0 12px; padding: 12px 13px; }
+        .sidebar-footer { text-align: center; font-size: 11px; color: #c49ba2; padding: 0 20px; }
+        .btn-sair { background-color: #92000a; color: white; text-align: center; padding: 10px; margin: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: block; }
+        .btn-sair:hover { background-color: #b3000d; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #f9fafb; overflow-y: auto; }
+        .top-bar { background-color: #ffffff; padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; box-sizing: border-box; }
+        .top-bar h1 { margin: 0; font-size: 22px; color: #4a0610; font-weight: 700; }
+        .user-section { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #6b7280; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        .page-body { padding: 35px; box-sizing: border-box; height: 100%; }
+        .section-title { font-size: 24px; color: #111827; margin: 0 0 8px 0; font-weight: 700; }
+        .section-subtitle { color: #6b7280; font-size: 14px; margin: 0 0 25px 0; }
+
+        /* Nova Estrutura de Abas Avançada para Painel Profissional */
+        .config-container { display: grid; grid-template-columns: 220px 1fr; background: white; border: 1px solid #e5e7eb; border-radius: 12px; min-height: 500px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); overflow: hidden; }
+
+        .tabs-menu { background: #f9fafb; border-right: 1px solid #e5e7eb; padding: 15px 0; display: flex; flex-direction: column; gap: 4px; }
+        .tab-btn { padding: 12px 24px; font-size: 14px; font-weight: 600; color: #4b5563; border: none; background: none; text-align: left; cursor: pointer; border-left: 3px solid transparent; transition: all 0.2s; }
+        .tab-btn:hover { background: #f3f4f6; color: #111827; }
+        .tab-btn.active { background: #fff; color: #b0712a; border-left-color: #b0712a; }
+
+        .tabs-content { padding: 35px; box-sizing: border-box; }
+        .tab-panel { display: none; max-width: 600px; }
+        .tab-panel.active { display: block; }
+
+        .tab-panel h3 { margin: 0 0 20px 0; font-size: 18px; color: #111827; border-bottom: 2px solid #f3f4f6; padding-bottom: 8px; }
+
+        label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-top: 14px; }
+        input[type="text"], input[type="email"], input[type="password"] { width: 100%; padding: 10px 12px; margin-top: 5px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; font-size: 14px; background: #fff; }
+        input:focus { border-color: #b0712a; outline: none; box-shadow: 0 0 0 3px rgba(176,113,42,0.15); }
+
+        .checkbox-group { display: flex; align-items: center; gap: 10px; margin-top: 15px; background: #f9fafb; padding: 12px; border-radius: 6px; border: 1px solid #e5e7eb; }
+        .checkbox-group input { width: auto; margin: 0; }
+        .checkbox-group label { margin: 0; font-weight: 500; cursor: pointer; }
+
+        .btn-submit { background-color: #b0712a; color: white; border: none; border-radius: 6px; padding: 12px 24px; font-size: 14px; font-weight: 600; cursor: pointer; margin-top: 24px; transition: background 0.2s; }
+        .btn-submit:hover { background-color: #925c1f; }
+
+        .bottom-credits { text-align: center; margin-top: 40px; font-size: 12px; color: #9ca3af; }
+    </style>
+    <script>
+        function alternarAba(event, name) {
+            const panels = document.getElementsByClassName('tab-panel');
+            for (let i = 0; i < panels.length; i++) {
+                panels[i].classList.remove('active');
+            }
+            const buttons = document.getElementsByClassName('tab-btn');
+            for (let i = 0; i < buttons.length; i++) {
+                buttons[i].classList.remove('active');
+            }
+            document.getElementById(name).classList.add('active');
+            event.currentTarget.classList.add('active');
+        }
+    </script>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container">
+                <img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo" />
+            </div>
+            <div class="menu-items">
+                <a href="{% url 'painel' %}" class="menu-link">Painel</a>
+                <a href="{% url 'gerar_contratos' %}" class="menu-link">Gerar Contratos</a>
+                <a href="{% url 'historico_contratos' %}" class="menu-link">Histórico de Contratos</a>
+                <a href="{% url 'analise_clausulas' %}" class="menu-link">Análise de Cláusulas</a>
+                <a href="{% url 'consulta_legislativa' %}" class="menu-link">Consulta Legislativa</a>
+                <a href="{% url 'assistente_juridico' %}" class="menu-link">Assistente Jurídico</a>
+                <a href="{% url 'configuracoes' %}" class="menu-link active">Configurações</a>
+            </div>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn-sair">Sair</button></form>
+            <div class="sidebar-footer">Legalize © 2026<br/>Todos os direitos reservados</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Configurações do Sistema</h1>
+            <div class="user-section">Olá, {{ user.username }} <div class="avatar">👤</div></div>
+        </div>
+
+        <div class="page-body">
+            <h2 class="section-title">Gerenciamento da Conta</h2>
+            <p class="section-subtitle">Ajuste os parâmetros do seu perfil de usuário corporativo, segurança e notificações da plataforma.</p>
+
+            <div class="config-container">
+                <div class="tabs-menu">
+                    <button type="button" class="tab-btn active" onclick="alternarAba(event, 'panel_perfil')">👤 Perfil do Usuário</button>
+                    <button type="button" class="tab-btn" onclick="alternarAba(event, 'panel_seguranca')">🔒 Segurança e Senha</button>
+                    <button type="button" class="tab-btn" onclick="alternarAba(event, 'panel_preferencias')">⚙️ Preferências Gerais</button>
+                </div>
+
+                <div class="tabs-content">
+                    <form method="POST">
+                        {% csrf_token %}
+
+                        <div id="panel_perfil" class="tab-panel active">
+                            <h3>Informações do Perfil</h3>
+                            <label>Nome de Identificação Corporativa</label>
+                            <input type="text" value="{{ user.username }}" readonly style="background:#f3f4f6; color:#6b7280; cursor:not-allowed;" />
+
+                            <label>Endereço de E-mail Institucional</label>
+                            <input type="email" placeholder="seu@exemplo.com" required />
+
+                            <button type="submit" class="btn-submit">Salvar Perfil</button>
+                        </div>
+
+                        <div id="panel_seguranca" class="tab-panel">
+                            <h3>Alteração de Credenciais</h3>
+                            <label>Senha Atual do Sistema</label>
+                            <input type="password" placeholder="••••••••••••" />
+
+                            <label>Nova Senha de Acesso</label>
+                            <input type="password" placeholder="Mínimo 8 caracteres" />
+
+                            <label>Confirmação da Nova Senha</label>
+                            <input type="password" placeholder="Repita a nova senha" />
+
+                            <button type="submit" class="btn-submit">Atualizar Credenciais</button>
+                        </div>
+
+                        <div id="panel_preferencias" class="tab-panel">
+                            <h3>Parâmetros da Plataforma</h3>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="c1" checked />
+                                <label for="c1">Habilitar envio de relatórios de contratos por e-mail</label>
+                            </div>
+                            <div class="checkbox-group">
+                                <input type="checkbox" id="c2" />
+                                <label for="c2">Sincronizar histórico automático com armazenamento em nuvem</label>
+                            </div>
+
+                            <button type="submit" class="btn-submit">Salvar Preferências</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div class="bottom-credits">
+                Desenvolvido por EQUIPE LEGALIZE © 2026
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

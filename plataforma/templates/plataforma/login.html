@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Login</title>
+    <style>
+        body { margin:0; padding:0; background: linear-gradient(135deg, #510408 0%, #1e0103 100%); font-family: sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .card-container { width: 750px; height: 420px; background-color: #92000a; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; overflow: hidden; }
+        .left-side { width: 45%; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #92000a; }
+        .logo-img { max-width: 140px; height: auto; margin-bottom: 10px; }
+        .right-side { width: 55%; background-color: #440106; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 30px; box-sizing: border-box; }
+        .login-header { display: flex; align-items: center; color: white; font-size: 24px; font-weight: bold; margin-bottom: 25px; }
+        .login-header span { margin-right: 8px; font-size: 20px; color: #b07d35; }
+        .form-group { width: 100%; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; background-color: #210103; border: none; border-radius: 5px; color: #fff; box-sizing: border-box; font-size: 14px; }
+        input::placeholder { color: #756263; }
+        .btn-entrar { width: 100%; padding: 12px; background-color: #aa722b; border: none; border-radius: 5px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-entrar:hover { background-color: #925c1f; }
+        .links-footer { margin-top: 20px; text-align: center; }
+        .links-footer a { color: white; text-decoration: none; font-size: 12px; display: block; margin-bottom: 8px; font-weight: 500; }
+        .alert-error { width: 100%; padding: 10px; background-color: #f8d7da; color: #721c24; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="left-side">
+            <img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo" />
+        </div>
+        <div class="right-side">
+            <div class="login-header">
+                <span>👤</span> Login
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert-error">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" style="width: 100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="usuario" placeholder="Usuário" required autocomplete="username" />
+                </div>
+                <div class="form-group">
+                    <input type="password" name="senha" placeholder="Senha" required autocomplete="new-password" value="" />
+                </div>
+                <button type="submit" class="btn-entrar">Entrar</button>
+            </form>
+            <div class="links-footer">
+                <a href="{% url 'esqueceu_senha' %}">Esqueceu a senha?</a>
+                <a href="{% url 'cadastro' %}">Cadastrar novo usuário</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

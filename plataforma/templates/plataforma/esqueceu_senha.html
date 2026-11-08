@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Recuperação de Acesso</title>
+    <style>
+        body { margin:0; padding:0; background: linear-gradient(135deg, #510408 0%, #1e0103 100%); font-family: sans-serif; height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .card-container { width: 750px; height: 420px; background-color: #92000a; border-radius: 15px; box-shadow: 0 8px 25px rgba(0,0,0,0.5); display: flex; overflow: hidden; }
+        .left-side { width: 45%; display: flex; flex-direction: column; justify-content: center; align-items: center; background-color: #92000a; }
+        .logo-img { max-width: 140px; height: auto; }
+        .right-side { width: 55%; background-color: #440106; display: flex; flex-direction: column; justify-content: center; padding: 30px; box-sizing: border-box; }
+        .login-header { display: flex; flex-direction: column; color: white; font-size: 22px; font-weight: bold; margin-bottom: 20px; text-align: center; }
+        .login-subtitle { font-size: 13px; color: #c49ba2; font-weight: 500; margin-top: 8px; line-height: 1.4; }
+        .form-group { width: 100%; margin-bottom: 15px; }
+        input { width: 100%; padding: 12px; background-color: #210103; border: none; border-radius: 5px; color: #fff; box-sizing: border-box; font-size: 14px; }
+        input::placeholder { color: #756263; }
+        .btn-enviar { width: 100%; padding: 12px; background-color: #aa722b; border: none; border-radius: 5px; color: white; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        .btn-enviar:hover { background-color: #925c1f; }
+        .links-footer { margin-top: 25px; text-align: center; }
+        .links-footer a { color: white; text-decoration: none; font-size: 13px; font-weight: 500; }
+        .alert-message { width: 100%; padding: 10px; background-color: #def7ec; color: #03543f; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; box-sizing: border-box; }
+        .alert-error { width: 100%; padding: 10px; background-color: #f8d7da; color: #721c24; border-radius: 5px; margin-bottom: 15px; font-size: 13px; text-align: center; box-sizing: border-box; }
+    </style>
+</head>
+<body>
+    <div class="card-container">
+        <div class="left-side">
+            <img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo" />
+        </div>
+        <div class="right-side">
+            <div class="login-header">
+                Recuperar Senha
+                <span class="login-subtitle">Insira o e-mail cadastrado na plataforma para receber um link de redefinição de credenciais.</span>
+            </div>
+
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.tags == 'success' %}
+                        <div class="alert-message">{{ message }}</div>
+                    {% else %}
+                        <div class="alert-error">{{ message }}</div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" style="width: 100%;">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="email" name="email" placeholder="Seu e-mail cadastrado" required />
+                </div>
+                <button type="submit" class="btn-enviar">Enviar Link de Recuperação</button>
+            </form>
+            <div class="links-footer">
+                <a href="{% url 'login' %}">← Voltar para o Login</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

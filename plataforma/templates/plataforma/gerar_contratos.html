@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Gerar Contrato Avançado</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
+
+        .sidebar { width: 250px; background-color: #4a0610; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; flex-shrink: 0; box-sizing: border-box; }
+        .sidebar-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .logo-container { margin-bottom: 30px; display: flex; justify-content: center; width: 100%; }
+        .logo-img { max-width: 110px; height: auto; }
+        .menu-items { width: 100%; display: flex; flex-direction: column; }
+        .menu-link { padding: 12px 25px; color: #ffffff; text-decoration: none; font-size: 15px; display: block; }
+        .menu-link:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .menu-link.active { background-color: #b0712a; font-weight: 600; border-radius: 8px; margin: 0 12px; padding: 12px 13px; }
+        .sidebar-footer { text-align: center; font-size: 11px; color: #c49ba2; padding: 0 20px; }
+        .btn-sair { background-color: #92000a; color: white; text-align: center; padding: 10px; margin: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: block; }
+        .btn-sair:hover { background-color: #b3000d; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #f9fafb; overflow-y: auto; }
+        .top-bar { background-color: #ffffff; padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; box-sizing: border-box; }
+        .top-bar h1 { margin: 0; font-size: 22px; color: #4a0610; font-weight: 700; }
+        .user-section { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #6b7280; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        .page-body { padding: 35px; box-sizing: border-box; }
+
+        /* Grid principal do Workspace */
+        .workspace { display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px; align-items: start; }
+        .white-panel { background-color: #ffffff; border-radius: 12px; padding: 26px; border: 1px solid #e5e7eb; box-shadow: 0 1px 3px rgba(0,0,0,0.02); margin-bottom: 24px; }
+        .white-panel h3 { margin: 0 0 20px 0; color: #b0712a; font-size: 18px; font-weight: 700; }
+
+        fieldset { border: 1px solid #e5e7eb; border-radius: 8px; padding: 20px; margin-bottom: 20px; background-color: #f9fafb; }
+        legend { font-size: 14px; font-weight: 700; color: #4a0610; padding: 0 10px; }
+
+        label { display: block; font-size: 13px; font-weight: 600; color: #374151; margin-top: 10px; }
+        select, input, textarea { width: 100%; padding: 10px 12px; margin-top: 4px; border: 1px solid #d1d5db; border-radius: 6px; box-sizing: border-box; background-color: #ffffff; font-size: 14px; color: #111827; }
+
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+        .action-container { display: flex; gap: 10px; margin-top: 24px; position: sticky; bottom: 0; background: white; padding: 10px 0; border-top: 1px solid #e5e7eb; box-sizing: border-box; }
+        .btn { padding: 12px 20px; font-size: 14px; font-weight: 600; border: none; border-radius: 6px; cursor: pointer; text-decoration: none; flex: 1; text-align: center; }
+        .btn-gold { background-color: #b0712a; color: white; }
+        .btn-gold:hover { background-color: #925c1f; }
+        .btn-grey { background-color: #6b7280; color: white; max-width: 100px; }
+
+        /* Estilos da Biblioteca */
+        .fav-container-row { display: flex; justify-content: space-between; align-items: center; background: #f3f4f6; padding: 4px 10px; margin-bottom: 8px; border-radius: 6px; border-left: 4px solid #b0712a; }
+        .fav-item-btn { font-size: 13px; cursor: pointer; font-weight: 600; background: transparent; border: none; text-align: left; padding: 6px 0; width: 85%; }
+        .fav-delete-form { display: inline; margin: 0; padding: 0; }
+        .btn-trash { background: none; border: none; color: #92000a; cursor: pointer; font-size: 13px; padding: 4px; display: inline-block; }
+
+        /* Caixa de pré-visualização */
+        .preview-box { border: 1px solid #e5e7eb; border-radius: 6px; padding: 20px; background-color: #ffffff; min-height: 400px; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-size: 13px; color: #111827; line-height: 1.6; white-space: pre-wrap; word-wrap: break-word; overflow-y: auto; height: 48vh; }
+        .conditional-section { border-left: 3px dashed #b0712a; padding-left: 15px; margin: 12px 0; display: none; }
+        .hidden-field { display: none; }
+
+        /* Layout de duas colunas para os campos superiores da biblioteca */
+        .biblioteca-top-grid { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 16px; margin-bottom: 16px; }
+        .panel-biblioteca-scroll { max-height: 230px; overflow-y: auto; margin-bottom: 0; }
+    </style>
+    <script>
+        const numeraisPorExtenso = ["QUINTA", "SEXTA", "SÉTIMA", "OITAVA", "NONA", "DÉCIMA"];
+
+        const subSegmentos = {
+            advocaticios: ["Contrato de Honorários Fixos", "Contrato de Honorários por Êxito", "Contrato de Honorários de Sucumbência"],
+            empresariais: ["Contrato Social e Acordo de Sócios", "Contrato de Parceria e Joint Venture", "Contrato de Confidencialidade (NDA)", "Contrato de Distribuição e Franquia"],
+            civeis: ["Contrato de Compra e Venda", "Contrato de Locação", "Contrato de Doação e Comodato"],
+            trabalho: ["Contrato de Trabalho (CLT)", "Contrato de Prestação de Serviços Autônomos", "Contrato de Teletrabalho (Home Office)"]
+        };
+
+        function atualizarSubSegmentos(categoria, valorSelecionado) {
+            const subSelect = document.getElementById('sub_segmento_contrato');
+            subSelect.innerHTML = "";
+
+            if(subSegmentos[categoria]) {
+                subSegmentos[categoria].forEach(function(sub) {
+                    let opt = document.createElement('option');
+                    opt.value = sub;
+                    opt.innerText = sub;
+                    if(sub === valorSelecionado) opt.selected = true;
+                    subSelect.appendChild(opt);
+                });
+            }
+            exibirCamposEspecificos();
+        }
+
+        function exibirCamposEspecificos() {
+            const cat = document.getElementById('categoria_contrato').value;
+            const sub = document.getElementById('sub_segmento_contrato').value;
+
+            document.getElementById('sec_advocaticio').style.display = 'none';
+            document.getElementById('sec_exito').style.display = 'none';
+            document.getElementById('sec_nda').style.display = 'none';
+            document.getElementById('sec_contrato_social').style.display = 'none';
+            document.getElementById('sec_imobiliario').style.display = 'none';
+            document.getElementById('sec_trabalho').style.display = 'none';
+            document.getElementById('sec_homeoffice').style.display = 'none';
+
+            if(cat === 'advocaticios') {
+                document.getElementById('sec_advocaticio').style.display = 'block';
+                if(sub === 'Contrato de Honorários por Êxito') document.getElementById('sec_exito').style.display = 'block';
+            } else if(cat === 'empresariais') {
+                if(sub === 'Contrato de Confidencialidade (NDA)') document.getElementById('sec_nda').style.display = 'block';
+                else if(sub === 'Contrato Social e Acordo de Sócios') document.getElementById('sec_contrato_social').style.display = 'block';
+            } else if(cat === 'civeis') {
+                if(sub === 'Contrato de Compra e Venda' || sub === 'Contrato de Locação') document.getElementById('sec_imobiliario').style.display = 'block';
+            } else if(cat === 'trabalho') {
+                document.getElementById('sec_trabalho').style.display = 'block';
+                if(sub === 'Contrato de Teletrabalho (Home Office)') document.getElementById('sec_homeoffice').style.display = 'block';
+            }
+        }
+
+        // ATUALIZAÇÃO: Injeção de títulos usando tags HTML de negrito para renderização real
+        function injetarClausula(titulo, descricao) {
+            const txtArea = document.getElementById('clausulas_campo');
+            const textoAtual = txtArea.value;
+            const matches = textoAtual.match(/CLÁUSULA/g);
+            const total = matches ? matches.length : 0;
+            const numeroExtenso = total < numeraisPorExtenso.length ? numeraisPorExtenso[total] : `Nº ${total + 5}`;
+
+            // Título envelopado na tag <b> para garantir a formatação
+            const formatada = `<b>CLÁUSULA ${numeroExtenso} - ${titulo.toUpperCase()}</b>\n${descricao}`;
+
+            if(textoAtual.trim() !== "") {
+                txtArea.value = textoAtual + "\n\n" + formatada;
+            } else {
+                txtArea.value = formatada;
+            }
+        }
+
+        function alternarTipoPessoa(parte, tipo) {
+            const pfBlock = document.getElementById(`bloco_pf_${parte}`);
+            const pjBlock = document.getElementById(`bloco_pj_${parte}`);
+            const labelNome = document.getElementById(`label_nome_${parte}`);
+            const inputDoc = document.getElementById(`doc_${parte}`);
+
+            if (tipo === 'PJ') {
+                pfBlock.style.display = 'none';
+                pjBlock.style.display = 'block';
+                labelNome.innerText = "Razão Social da Empresa";
+                inputDoc.placeholder = "Apenas os 14 números do CNPJ";
+                inputDoc.setAttribute('maxlength', '14');
+            } else {
+                pfBlock.style.display = 'contents';
+                pjBlock.style.display = 'none';
+                labelNome.innerText = "Nome Completo";
+                inputDoc.placeholder = "Apenas os 11 números do CPF";
+                inputDoc.setAttribute('maxlength', '11');
+            }
+        }
+
+        function apenasNumeros(event) {
+            const charCode = (event.which) ? event.which : event.keyCode;
+            if (charCode > 31 && (charCode < 48 || charCode > 57)) event.preventDefault();
+        }
+
+        function verificarFormaPagamento(select) {
+            document.getElementById('bloco_parcelas').style.display = (select.value === 'Parcelado Mensal') ? 'block' : 'none';
+        }
+
+        window.addEventListener("DOMContentLoaded", function() {
+            const catSalva = document.getElementById('hidden_categoria').value || 'advocaticios';
+            const subSalvo = document.getElementById('hidden_subsegmento').value || '';
+            const logoAlignSalvo = document.getElementById('hidden_logo_align').value || 'CENTER';
+            const tipoASalvo = document.getElementById('hidden_tipo_a').value || 'PF';
+            const tipoBSalvo = document.getElementById('hidden_tipo_b').value || 'PF';
+            const civilASalvo = document.getElementById('hidden_civil_a').value || 'Solteiro(a)';
+            const civilBSalvo = document.getElementById('hidden_civil_b').value || 'Solteiro(a)';
+            const pgtoSalvo = document.getElementById('hidden_forma_pgto').value || 'À Vista';
+            const parcelasSalvas = document.getElementById('hidden_qtd_parcelas').value || '2';
+
+            document.getElementById('categoria_contrato').value = catSalva;
+            atualizarSubSegmentos(catSalva, subSalvo);
+
+            document.getElementById('logo_alinhamento_select').value = logoAlignSalvo;
+            document.getElementById('tipo_parte_a_select').value = tipoASalvo;
+            document.getElementById('tipo_parte_b_select').value = tipoBSalvo;
+            document.getElementById('estado_civil_a_select').value = civilASalvo;
+            document.getElementById('estado_civil_b_select').value = civilBSalvo;
+            document.getElementById('forma_pagamento_select').value = pgtoSalvo;
+            document.getElementById('qtd_parcelas_select').value = parcelasSalvas;
+
+            alternarTipoPessoa('a', tipoASalvo);
+            alternarTipoPessoa('b', tipoBSalvo);
+            verificarFormaPagamento(document.getElementById('forma_pagamento_select'));
+            exibirCamposEspecificos();
+        });
+    </script>
+</head>
+<body>
+
+    <input type="hidden" id="hidden_categoria" value="{{ dados_form.categoria }}" />
+    <input type="hidden" id="hidden_subsegmento" value="{{ dados_form.sub_segmento }}" />
+    <input type="hidden" id="hidden_logo_align" value="{{ dados_form.logo_alinhamento }}" />
+    <input type="hidden" id="hidden_tipo_a" value="{{ dados_form.tipo_parte_a }}" />
+    <input type="hidden" id="hidden_tipo_b" value="{{ dados_form.tipo_parte_b }}" />
+    <input type="hidden" id="hidden_civil_a" value="{{ dados_form.estado_civil_a }}" />
+    <input type="hidden" id="hidden_civil_b" value="{{ dados_form.estado_civil_b }}" />
+    <input type="hidden" id="hidden_forma_pgto" value="{{ dados_form.forma_pagamento }}" />
+    <input type="hidden" id="hidden_qtd_parcelas" value="{{ dados_form.qtd_parcelas }}" />
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container"><img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Logo" /></div>
+            <div class="menu-items">
+                <a href="{% url 'painel' %}" class="menu-link">Painel</a>
+                <a href="{% url 'gerar_contratos' %}" class="menu-link active">Gerar Contratos</a>
+                <a href="{% url 'historico_contratos' %}" class="menu-link">Histórico de Contratos</a>
+                <a href="{% url 'analise_clausulas' %}" class="menu-link">Análise de Cláusulas</a>
+                <a href="{% url 'consulta_legislativa' %}" class="menu-link">Consulta Legislativa</a>
+                <a href="{% url 'assistente_juridico' %}" class="menu-link">Assistente Jurídico</a>
+                <a href="{% url 'configuracoes' %}" class="menu-link">Configurações</a>
+            </div>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn-sair">Sair</button></form>
+            <div class="sidebar-footer">Legalize © 2026<br/>Todos os direitos reservados</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Gerar Contrato</h1>
+            <div class="user-section">Olá, {{ user.username }} <div class="avatar">👤</div></div>
+        </div>
+
+        <div class="page-body">
+            <div class="workspace">
+
+                <form id="main_contract_form" method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    {% if request.GET.editar_id %}<input type="hidden" name="editar_id" value="{{ request.GET.editar_id }}">{% endif %}
+
+                    <div class="white-panel">
+                        <h3>Parâmetros da Minuta</h3>
+
+                        <fieldset>
+                            <legend>IDENTIFICAÇÃO E IDENTIDADE VISUAL DO CONTRATO</legend>
+                            <div class="grid-2">
+                                <div>
+                                    <label>Número do Contrato</label>
+                                    <input type="text" name="numero_contrato" placeholder="Ex: 001" value="{{ dados_form.numero_contrato }}" onkeypress="apenasNumeros(event)" />
+                                </div>
+                                <div>
+                                    <label>Ano de Emissão</label>
+                                    <input type="text" name="ano_contrato" placeholder="Ex: 2026" maxlength="4" value="{{ dados_form.ano_contrato }}" onkeypress="apenasNumeros(event)" />
+                                </div>
+                            </div>
+                            <div class="grid-2" style="margin-top: 10px;">
+                                <div>
+                                    <label>Logotipo do Cabeçalho (.jpg / .png)</label>
+                                    <input type="file" name="logo_file" accept="image/*" />
+                                </div>
+                                <div>
+                                    <label>Posicionamento do Logotipo</label>
+                                    <select id="logo_alinhamento_select" name="logo_alinhamento">
+                                        <option value="LEFT">À Esquerda</option>
+                                        <option value="CENTER">Centralizado</option>
+                                        <option value="RIGHT">À Direita</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <div class="grid-2" style="margin-bottom: 15px;">
+                            <div>
+                                <label>Grupo Segmentar do Contrato</label>
+                                <select id="categoria_contrato" name="categoria_contrato" onchange="atualizarSubSegmentos(this.value, '')">
+                                    <option value="advocaticios">1 - Contrato de Prestação de Serviços Advocatícios</option>
+                                    <option value="empresariais">2 - Contratos Empresariais e Societários</option>
+                                    <option value="civeis">3 - Contratos Cíveis e Imobiliários</option>
+                                    <option value="trabalho">4 - Contratos de Trabalho</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Especificação da Minuta (Sub-segmento)</label>
+                                <select id="sub_segmento_contrato" name="sub_segmento_contrato" onchange="exibirCamposEspecificos()">
+                                    </select>
+                            </div>
+                        </div>
+
+                        <div id="sec_advocaticio" class="conditional-section">
+                            <div class="grid-2">
+                                <div>
+                                    <label>Inscrição OAB do Advogado</label>
+                                    <input type="text" name="oab_advogado" value="{{ dados_form.oab_advogado }}" placeholder="Ex: OAB/GO 74.122" />
+                                end</div>
+                                <div>
+                                    <label>Fase Processual Limite Coberta</label>
+                                    <input type="text" name="fase_processual" value="{{ dados_form.fase_processual }}" placeholder="Ex: Até sentença de 1º grau" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sec_exito" class="conditional-section">
+                            <label>Porcentagem Cláusula Êxito Quota-Litis (%)</label>
+                            <input type="number" name="porcentagem_exito" value="{{ dados_form.porcentagem_exito }}" placeholder="Ex: 20" />
+                        </div>
+                        <div id="sec_nda" class="conditional-section">
+                            <div class="grid-2">
+                                <div>
+                                    <label>Prazo de Validade de Sigilo (Anos)</label>
+                                    <input type="number" name="prazo_sigilo" value="{{ dados_form.prazo_sigilo }}" placeholder="Ex: 5" />
+                                </div>
+                                <div>
+                                    <label>Multa Punitiva por Vazamento (R$)</label>
+                                    <input type="number" name="multa_infracao_nda" value="{{ dados_form.multa_infracao_nda }}" placeholder="Ex: 50000" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sec_contrato_social" class="conditional-section">
+                            <label>Capital Social Inicial Declarado (R$)</label>
+                            <input type="number" name="capital_social" value="{{ dados_form.capital_social }}" placeholder="0.00" />
+                        </div>
+                        <div id="sec_imobiliario" class="conditional-section">
+                            <div class="grid-2">
+                                <div>
+                                    <label>Nº da Matrícula / Cartório de Registro de Imóveis</label>
+                                    <input type="text" name="matricula_imovel" value="{{ dados_form.matricula_imovel }}" placeholder="Ex: Matrícula 12.332 do 1º RI" />
+                                </div>
+                                <div>
+                                    <label>Responsável Contratual por Impostos/Taxas</label>
+                                    <input type="text" name="responsavel_taxas" value="{{ dados_form.responsavel_taxas }}" placeholder="Ex: Exclusivamente o Locatário" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sec_trabalho" class="conditional-section">
+                            <div class="grid-2">
+                                <div>
+                                    <label>Cargo/Função Laboral Designada</label>
+                                    <input type="text" name="cargo_colaborador" value="{{ dados_form.cargo_colaborador }}" placeholder="Ex: Analista de TI" />
+                                </div>
+                                <div>
+                                    <label>Jornada Semanal e Escala</label>
+                                    <input type="text" name="jornada_trabalho" value="{{ dados_form.jornada_trabalho }}" placeholder="Ex: 44 horas semanais" />
+                                </div>
+                            </div>
+                        </div>
+                        <div id="sec_homeoffice" class="conditional-section">
+                            <label>Ajuda de Custo Mensal Fixa Infraestrutura Home Office (R$)</label>
+                            <input type="number" name="ajuda_custo_home" value="{{ dados_form.ajuda_custo_home }}" placeholder="Ex: 150" />
+                        </div>
+
+                        <fieldset>
+                            <legend>CONTRATANTE / PARTE A</legend>
+                            <div class="grid-2" style="margin-bottom: 10px;">
+                                <div>
+                                    <label>Regime de Natureza Jurídica</label>
+                                    <select id="tipo_parte_a_select" name="tipo_parte_a" onchange="alternarTipoPessoa('a', this.value)">
+                                        <option value="PF">Pessoa Física (PF)</option>
+                                        <option value="PJ">Pessoa Jurídica (PJ)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label id="label_nome_a">Nome Completo</label>
+                                    <input type="text" name="parte_a" value="{{ dados_form.parte_a }}" required />
+                                </div>
+                            </div>
+                            <div class="grid-2">
+                                <div>
+                                    <label>Inscrição Federal (CPF / CNPJ)</label>
+                                    <input type="text" id="doc_a" name="doc_a" value="{{ dados_form.doc_a }}" onkeypress="apenasNumeros(event)" required />
+                                </div>
+                                <div id="bloco_pj_a" class="hidden-field">
+                                    <label>Nome do Representante Legal</label>
+                                    <input type="text" name="representante_a" value="{{ dados_form.representante_a }}" />
+                                </div>
+                            </div>
+                            <div class="grid-3" style="margin-top:10px;">
+                                <div>
+                                    <label>RG (Registro Geral)</label>
+                                    <input type="text" name="rg_a" value="{{ dados_form.rg_a }}" />
+                                </div>
+                                <div>
+                                    <label>Inscrição Estadual (I.E)</label>
+                                    <input type="text" name="ie_a" value="{{ dados_form.ie_a }}" />
+                                </div>
+                                <div id="bloco_pf_a" style="display: contents;">
+                                    <div>
+                                        <label>Estado Civil</label>
+                                        <select id="estado_civil_a_select" name="estado_civil_a">
+                                            <option value="Solteiro(a)">Solteiro(a)</option>
+                                            <option value="Casado(a)">Casado(a)</option>
+                                            <option value="Divorciado(a)">Divorciado(a)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Profissão</label>
+                                        <input type="text" name="profissao_a" value="{{ dados_form.profissao_a }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Endereço Completo</label>
+                                <input type="text" name="endereco_a" value="{{ dados_form.endereco_a }}" placeholder="Rua, Número, Bairro, Cidade-UF" />
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>CONTRATADO / PARTE B</legend>
+                            <div class="grid-2" style="margin-bottom: 10px;">
+                                <div>
+                                    <label>Regime de Natureza Jurídica</label>
+                                    <select id="tipo_parte_b_select" name="tipo_parte_b" onchange="alternarTipoPessoa('b', this.value)">
+                                        <option value="PF">Pessoa Física (PF)</option>
+                                        <option value="PJ">Pessoa Jurídica (PJ)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label id="label_nome_b">Nome Completo</label>
+                                    <input type="text" name="parte_b" value="{{ dados_form.parte_b }}" required />
+                                </div>
+                            </div>
+                            <div class="grid-2">
+                                <div>
+                                    <label>Inscrição Federal (CPF / CNPJ)</label>
+                                    <input type="text" id="doc_b" name="doc_b" value="{{ dados_form.doc_b }}" onkeypress="apenasNumeros(event)" required />
+                                </div>
+                                <div id="bloco_pj_b" class="hidden-field">
+                                    <label>Nome do Representante Legal</label>
+                                    <input type="text" name="representante_b" value="{{ dados_form.representante_b }}" />
+                                </div>
+                            </div>
+                            <div class="grid-3" style="margin-top:10px;">
+                                <div>
+                                    <label>RG (Registro Geral)</label>
+                                    <input type="text" name="rg_b" value="{{ dados_form.rg_b }}" />
+                                </div>
+                                <div>
+                                    <label>Inscrição Estadual (I.E)</label>
+                                    <input type="text" name="ie_b" value="{{ dados_form.ie_b }}" />
+                                </div>
+                                <div id="bloco_pf_b" style="display: contents;">
+                                    <div>
+                                        <label>Estado Civil</label>
+                                        <select id="estado_civil_b_select" name="estado_civil_b">
+                                            <option value="Solteiro(a)">Solteiro(a)</option>
+                                            <option value="Casado(a)">Casado(a)</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label>Profissão</label>
+                                        <input type="text" name="profissao_b" value="{{ dados_form.profissao_b }}" />
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <label>Endereço Completo</label>
+                                <input type="text" name="endereco_b" value="{{ dados_form.endereco_b }}" placeholder="Rua, Número, Bairro, Cidade-UF" />
+                            </div>
+                        </fieldset>
+
+                        <fieldset>
+                            <legend>OBJETO E CONDIÇÕES FINANCEIRAS</legend>
+                            <div>
+                                <label>Descrição Detalhada do Objeto</label>
+                                <textarea name="objeto_detalhado" rows="3" required>{{ dados_form.objeto_detalhado }}</textarea>
+                            </div>
+                            <div class="grid-3" style="margin-top:10px;">
+                                <div>
+                                    <label>Data de Assinatura</label>
+                                    <input type="date" name="data" value="{{ dados_form.data }}" required />
+                                </div>
+                                <div>
+                                    <label>Vigência (Meses)</label>
+                                    <input type="number" name="vigencia" value="{{ dados_form.vigencia }}" placeholder="Ex: 12" required />
+                                </div>
+                                <div>
+                                    <label>Valor Total Bruto (R$)</label>
+                                    <input type="number" step="0.01" name="valor" value="{{ dados_form.valor_puro }}" placeholder="0.00" required />
+                                </div>
+                            </div>
+                            <div class="grid-2" style="margin-top:10px;">
+                                <div>
+                                    <label>Forma de Liquidação</label>
+                                    <select id="forma_pagamento_select" name="forma_pagamento" onchange="verificarFormaPagamento(this)">
+                                        <option value="À Vista">À Vista</option>
+                                        <option value="Parcelado Mensal">Parcelado Mensal</option>
+                                        <option value="50% Sinal e 50% na Entrega">50% Sinal / 50% Entrega</option>
+                                    </select>
+                                </div>
+                                <div id="bloco_parcelas" class="hidden-field">
+                                    <label>Quantidade de Parcelas</label>
+                                    <select id="qtd_parcelas_select" name="qtd_parcelas">
+                                        <option value="2">2x Parcelas</option>
+                                        <option value="3">3x Parcelas</option>
+                                        <option value="6">6x Parcelas</option>
+                                        <option value="12">12x Parcelas</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid-2" style="margin-top:10px;">
+                                <div>
+                                    <label>Multa Moratória (%)</label>
+                                    <input type="number" name="multa_atraso" value="{{ dados_form.multa_atraso|default:'2' }}" />
+                                </div>
+                                <div>
+                                    <label>Foro Competente Comarca</label>
+                                    <input type="text" name="foro" value="{{ dados_form.foro }}" placeholder="Ex: São Paulo - SP" required />
+                                </div>
+                            </div>
+                        </fieldset>
+
+                        <label>Cláusulas Extra / Condições Especiais</label>
+                        <textarea id="clausulas_campo" name="clausulas" rows="6">{{ dados_form.clausulas }}</textarea>
+
+                        <div class="action-container">
+                            <button type="submit" name="visualizar" class="btn btn-gold">Atualizar Pré-visualização</button>
+                            <button type="submit" name="baixar" class="btn btn-gold" style="background-color: #4a0610;">Emitir e Baixar PDF (.pdf)</button>
+                            <a href="{% url 'historico_contratos' %}" class="btn btn-grey">Voltar</a>
+                        </div>
+                    </div>
+                </form>
+
+                <div style="display: flex; flex-direction: column; position: sticky; top: 0px;">
+
+                    <div class="biblioteca-top-grid">
+
+                        <div class="white-panel panel-biblioteca-scroll">
+                            <h3>📚 Cláusulas Favoritas</h3>
+                            {% if clausulas_favoritas %}
+                                {% for fav in clausulas_favoritas %}
+                                    <div class="fav-container-row">
+                                        <button type="button" class="fav-item-btn" onclick="injetarClausula('{{ fav.titulo|escapejs }}', '{{ fav.texto|escapejs }}')">
+                                            <strong>{{ fav.titulo }}</strong>
+                                        </button>
+
+                                        <form action="" method="POST" class="fav-delete-form" onsubmit="return confirm('Deseja deletar permanentemente esta cláusula do sistema?');">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="clausula_id_remover" value="{{ fav.id }}" />
+                                            <button type="submit" class="btn-trash">❌</button>
+                                        </form>
+                                    </div>
+                                {% endfor %}
+                            {% else %}
+                                <p style="font-size: 12px; color:#6b7280; margin: 0;">Nenhuma cláusula cadastrada.</p>
+                            {% endif %}
+                        </div>
+
+                        <div class="white-panel" style="margin-bottom: 0; background: #fafafa; padding: 20px;">
+                            <form method="POST" action="">
+                                {% csrf_token %}
+                                <h3 style="color: #4a0610; margin-bottom: 12px; font-size: 16px;">➕ Nova Cláusula</h3>
+                                <input type="text" name="novo_titulo_biblioteca" placeholder="Título (Ex: Sigilo)" style="padding: 6px 10px; font-size: 13px;" required />
+                                <textarea name="nova_descricao_biblioteca" rows="2" placeholder="Texto jurídico formal..." style="padding: 6px 10px; font-size: 13px; margin-top: 6px;" required></textarea>
+                                <button type="submit" name="adicionar_direto_biblioteca" class="btn btn-gold" style="margin-top: 8px; padding: 6px; font-size: 12px; width: 100%;">
+                                    Salvar na Biblioteca
+                                </button>
+                            </form>
+                        </div>
+
+                    </div>
+
+                    <div class="white-panel" style="display: flex; flex-direction: column; margin-top: 5px;">
+                        <h3>Minuta Jurídica Gerada</h3>
+                        <div class="preview-box">{% if preview_texto %}{{ preview_texto|safe }}{% else %}Os dados preenchidos estruturarão a minuta automaticamente aqui.{% endif %}</div>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

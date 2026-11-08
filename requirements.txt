@@ -1,0 +1,5 @@
+Django>=6.0,<6.1
+reportlab>=4.0,<5
+python-dateutil>=2.9,<3
+Pillow>=11,<13
+# Para usar MySQL: pip install mysqlclient

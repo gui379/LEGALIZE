@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Legalize - Painel de Controle</title>
+    <style>
+        body { margin: 0; padding: 0; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f3f4f6; display: flex; height: 100vh; overflow: hidden; }
+        .sidebar { width: 250px; background-color: #4a0610; color: white; display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0; box-shrink: 0; box-sizing: border-box; }
+        .sidebar-top { display: flex; flex-direction: column; align-items: center; width: 100%; }
+        .logo-container { margin-bottom: 30px; display: flex; justify-content: center; width: 100%; padding: 0 20px; box-sizing: border-box; }
+        .logo-img { max-width: 110px; height: auto; display: block; }
+        .menu-items { width: 100%; display: flex; flex-direction: column; }
+        .menu-link { padding: 12px 25px; color: #ffffff; text-decoration: none; font-size: 15px; font-weight: 500; display: block; }
+        .menu-link:hover { background-color: rgba(255, 255, 255, 0.05); }
+        .menu-link.active { background-color: #b0712a; font-weight: 600; border-radius: 8px; margin: 0 12px; padding: 12px 13px; }
+        .sidebar-footer { text-align: center; font-size: 11px; color: #c49ba2; padding: 0 20px; }
+        .btn-sair { background-color: #92000a; color: white; text-align: center; padding: 10px; margin: 10px 20px; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 13px; display: block; }
+        .btn-sair:hover { background-color: #b3000d; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; background-color: #f9fafb; overflow-y: auto; }
+        .top-bar { background-color: #ffffff; padding: 15px 35px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #e5e7eb; box-sizing: border-box; }
+        .top-bar h1 { margin: 0; font-size: 22px; color: #4a0610; font-weight: 700; }
+        .user-section { display: flex; align-items: center; gap: 10px; font-size: 14px; color: #374151; }
+        .avatar { width: 32px; height: 32px; border-radius: 50%; background-color: #6b7280; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+
+        .page-body { padding: 35px; box-sizing: border-box; }
+        .section-title { font-size: 24px; color: #111827; margin: 0 0 8px 0; font-weight: 700; }
+        .section-subtitle { color: #6b7280; font-size: 14px; margin: 0 0 30px 0; }
+
+        /* Grid de Opções Ajustado para 3 colunas fluídas espalhando os 6 cards */
+        .grid-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 24px; }
+        .card { background-color: #ffffff; border-radius: 12px; padding: 24px; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; display: flex; flex-direction: column; justify-content: space-between; min-height: 170px; }
+        .card h3 { margin: 0 0 10px 0; color: #b0712a; font-size: 18px; font-weight: 700; }
+        .card p { margin: 0 0 20px 0; color: #4b5563; font-size: 14px; line-height: 1.5; }
+        .btn-gold { background-color: #b0712a; color: #ffffff; border: none; border-radius: 6px; padding: 9px 20px; font-size: 14px; font-weight: 600; cursor: pointer; text-decoration: none; display: inline-block; align-self: flex-start; }
+        .btn-gold:hover { background-color: #925c1f; }
+    </style>
+</head>
+<body>
+
+    <div class="sidebar">
+        <div class="sidebar-top">
+            <div class="logo-container"><img src="{% static 'imagens/logo.jpg' %}" class="logo-img" alt="Legalize"></div>
+            <div class="menu-items">
+                <a href="{% url 'painel' %}" class="menu-link active">Painel</a>
+                <a href="{% url 'gerar_contratos' %}" class="menu-link">Gerar Contratos</a>
+                <a href="{% url 'historico_contratos' %}" class="menu-link">Histórico de Contratos</a>
+                <a href="{% url 'analise_clausulas' %}" class="menu-link">Análise de Cláusulas</a>
+                <a href="{% url 'consulta_legislativa' %}" class="menu-link">Consulta Legislativa</a>
+                <a href="{% url 'assistente_juridico' %}" class="menu-link">Assistente Jurídico</a>
+                <a href="{% url 'configuracoes' %}" class="menu-link">Configurações</a>
+            </div>
+        </div>
+        <div>
+            <form method="post" action="{% url 'logout' %}" style="display:inline">{% csrf_token %}<button type="submit" class="btn-sair">Sair</button></form>
+            <div class="sidebar-footer">Legalize © 2026<br>Todos os direitos reservados</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="top-bar">
+            <h1>Painel de Controle</h1>
+            <div class="user-section">Olá, {{ user.username }} <div class="avatar">👤</div></div>
+        </div>
+
+        <div class="page-body">
+            <h2 class="section-title">Bem-vindo ao Legalize</h2>
+            <p class="section-subtitle">Selecione uma das ferramentas inteligentes abaixo para iniciar a operação na plataforma corporativa.</p>
+
+            <div class="grid-cards">
+                <!-- Tela 1 -->
+                <div class="card">
+                    <h3>Criação de Contratos</h3>
+                    <p>Crie e emita minutas completas em formato PDF aplicando regras formais de estruturação jurídica.</p>
+                    <a href="{% url 'gerar_contratos' %}" class="btn-gold">Acessar Emissor</a>
+                </div>
+
+                <!-- Tela 2 -->
+                <div class="card">
+                    <h3>Histórico de Emissões</h3>
+                    <p>Consulte todos os seus contratos arquivados no banco de dados e faça alterações e reedições.</p>
+                    <a href="{% url 'historico_contratos' %}" class="btn-gold">Ver Histórico</a>
+                </div>
+
+                <!-- Tela 3 -->
+                <div class="card">
+                    <h3>Análise de Cláusulas</h3>
+                    <p>Identifique cláusulas de risco em documentos e receba sugestões de conformidade civil de risco baixo.</p>
+                    <a href="{% url 'analise_clausulas' %}" class="btn-gold">Acessar Analisador</a>
+                </div>
+
+                <!-- Tela 4 -->
+                <div class="card">
+                    <h3>Assistente Jurídico</h3>
+                    <p>Redija cláusulas customizadas a partir de pontos de interesse e injete diretamente em novos contratos.</p>
+                    <a href="{% url 'assistente_juridico' %}" class="btn-gold">Acessar Assistente</a>
+                </div>
+
+                <!-- Tela 5 -->
+                <div class="card">
+                    <h3>Consulta Legislativa</h3>
+                    <p>Pesquise o mapeamento e validade de normas de conformidade documental vigentes no país.</p>
+                    <a href="{% url 'consulta_legislativa' %}" class="btn-gold">Acessar Legislação</a>
+                </div>
+
+                <!-- Tela 6 -->
+                <div class="card">
+                    <h3>Configurações da Conta</h3>
+                    <p>Ajuste os parâmetros do seu perfil institucional, altere senhas de acesso e gerencie preferências.</p>
+                    <a href="{% url 'configuracoes' %}" class="btn-gold">Acessar Painel</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
