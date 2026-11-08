@@ -1,0 +1,51 @@
+﻿thread,situacao,tempo_ms,erro
+1,FALHA,30.611,OperationalError: database table is locked
+2,FALHA,21.166,OperationalError: database table is locked
+3,FALHA,18.627,OperationalError: database table is locked
+4,FALHA,28.206,OperationalError: database table is locked
+5,FALHA,29.409,OperationalError: database table is locked
+6,FALHA,15.048,OperationalError: database table is locked
+7,FALHA,17.621,OperationalError: database table is locked
+8,FALHA,21.737,OperationalError: database table is locked
+9,FALHA,22.365,OperationalError: database table is locked
+10,FALHA,27.048,OperationalError: database table is locked
+11,FALHA,23.326,OperationalError: database table is locked
+12,FALHA,28.977,OperationalError: database table is locked
+13,FALHA,23.048,OperationalError: database table is locked
+14,FALHA,26.397,OperationalError: database table is locked
+15,FALHA,24.456,OperationalError: database table is locked
+16,FALHA,26.192,OperationalError: database table is locked
+17,FALHA,18.698,OperationalError: database table is locked
+18,FALHA,26.284,OperationalError: database table is locked
+19,FALHA,28.111,OperationalError: database table is locked
+20,SUCESSO,26.009,
+21,FALHA,26.82,OperationalError: database table is locked
+22,FALHA,25.949,OperationalError: database table is locked
+23,FALHA,23.833,OperationalError: database table is locked
+24,FALHA,23.282,OperationalError: database table is locked
+25,SUCESSO,26.171,
+26,FALHA,23.816,OperationalError: database table is locked
+27,SUCESSO,26.609,
+28,FALHA,23.672,OperationalError: database table is locked
+29,FALHA,18.909,OperationalError: database table is locked
+30,FALHA,20.336,OperationalError: database table is locked
+31,FALHA,26.201,OperationalError: database table is locked
+32,SUCESSO,19.326,
+33,FALHA,18.244,OperationalError: database table is locked
+34,FALHA,17.963,OperationalError: database table is locked
+35,FALHA,22.591,OperationalError: database table is locked
+36,FALHA,16.207,OperationalError: database table is locked
+37,FALHA,24.988,OperationalError: database table is locked
+38,SUCESSO,25.476,
+39,FALHA,20.026,OperationalError: database table is locked
+40,FALHA,10.529,OperationalError: database table is locked
+41,SUCESSO,25.033,
+42,SUCESSO,23.852,
+43,SUCESSO,24.184,
+44,FALHA,24.691,OperationalError: database table is locked
+45,FALHA,19.099,OperationalError: database table is locked
+46,FALHA,13.349,OperationalError: database table is locked
+47,SUCESSO,16.83,
+48,FALHA,23.569,OperationalError: database table is locked
+49,FALHA,23.246,OperationalError: database table is locked
+50,FALHA,23.427,OperationalError: database table is locked

@@ -1,0 +1,12 @@
+EXPERIMENTO 1 - 100 GERACOES DE PDF - LEGALIZE
+Data: 2026-11-08
+Python: 3.14.0 | Django: 6.0.10
+Metodo: 100 requisicoes POST sequenciais via Django Test Client; inclui validacao, gravacao em banco de teste e geracao PDF.
+Ambiente: execucao local, sem rede HTTP real, sem concorrencia.
+Execucoes: 100 | PDFs validos: 100 | Falhas: 0
+Registros criados no banco de teste: 100
+Tempo medio por requisicao: 10.507 ms
+Tempo minimo: 5.982 ms
+Tempo maximo: 25.877 ms
+Tempo total: 1.054 s
+CSV: C:\Users\guilh\OneDrive\Documentos\legalize_corrigido\legalize\evidencias_pdf\resultado_100_pdfs.csv

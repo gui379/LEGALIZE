@@ -1,0 +1,14 @@
+EXPERIMENTO 2 - 50 THREADS CONCORRENTES - LEGALIZE
+Python: 3.14.0 | Django: 6.0.10
+Banco de teste: sqlite | Nome: file:memorydb_default?mode=memory&cache=shared
+Metodo: 50 threads, barreira de inicio, cada uma tenta inserir um contrato distinto.
+Ambiente: Django TransactionTestCase; banco temporario de testes; sem HTTP e sem MySQL.
+Threads iniciadas: 50
+Operacoes bem-sucedidas: 9 | Falhas: 41
+Registros persistidos: 9
+Integridade dos registros bem-sucedidos: OK
+Tempo medio por thread: 22.831 ms
+Tempo total do lote: 0.035 s
+CSV: C:\Users\guilh\OneDrive\Documentos\legalize_corrigido\legalize\evidencias_concorrencia\resultado_50_threads.csv
+OBS: Falhas por database is locked sao possiveis no SQLite e devem ser relatadas.
+OBS: Este teste nao demonstra capacidade de 50 conexoes simultaneas em MySQL.

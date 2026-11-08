@@ -1,0 +1,12 @@
+﻿caso;cenario;esperado;resultado;detalhes
+1;CPF identico;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+2;CPF igual com pontuacao;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+3;CPF igual com formatos invertidos;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+4;CNPJ identico;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+5;CNPJ igual com pontuacao;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+6;Documento A vazio;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+7;Documento B vazio;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+8;Ambos vazios;REJEITAR;CONFORME;"HTTP 302; novos registros: 0; PDF: False"
+9;CPF diferentes;ACEITAR;CONFORME;"HTTP 200; novos registros: 1; PDF: True"
+10;CNPJ diferentes;ACEITAR;CONFORME;"HTTP 200; novos registros: 1; PDF: True"
+11;CPF e CNPJ distintos;ACEITAR;CONFORME;"HTTP 200; novos registros: 1; PDF: True"

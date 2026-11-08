@@ -1,0 +1,9 @@
+EXPERIMENTO 3 - VALIDACAO DA REGRA RNE-007 - LEGALIZE
+Data: 2026-11-08
+Python: 3.14.0 | Django: 6.0.10
+Metodo: requisicoes POST sequenciais via Django Test Client; comparacao de documentos normalizados e persistencia de contratos.
+Ambiente: local; banco de teste temporario SQLite; sem rede HTTP externa.
+Cenarios: 11 | Conformes: 11 | Divergentes: 0
+Registros criados: 3
+Escopo: compara identificadores apos remover pontuacao; NAO verifica digitos de CPF/CNPJ nem identidade real.
+CSV: C:\Users\guilh\OneDrive\Documentos\legalize_corrigido\legalize\evidencias_rne007\resultado_rne007.csv
