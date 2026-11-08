@@ -1,0 +1,63 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 1 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, plataforma, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying plataforma.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying plataforma.0002_clausulatemplate_obrigatoria_cliente_email_contato_and_more... OK
+  Applying plataforma.0003_contratogerado_delete_clausulatemplate_and_more... OK
+  Applying plataforma.0004_contratogerado_alerta_vencimento_enviado_and_more... OK
+  Applying plataforma.0005_remove_contratogerado_alerta_vencimento_enviado_and_more... OK
+  Applying plataforma.0006_contratogerado_deletado_em_and_more... OK
+  Applying sessions.0001_initial...test_cenarios_identificacao_partes (plataforma.test_experimento_rne007.ExperimentoRNE007.test_cenarios_identificacao_partes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.536s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
+Caso 01 | CPF identico: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 02 | CPF igual com pontuacao: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 03 | CPF igual com formatos invertidos: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 04 | CNPJ identico: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 05 | CNPJ igual com pontuacao: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 06 | Documento A vazio: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 07 | Documento B vazio: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 08 | Ambos vazios: CONFORME | HTTP 302; novos registros: 0; PDF: False
+Caso 09 | CPF diferentes: CONFORME | HTTP 200; novos registros: 1; PDF: True
+Caso 10 | CNPJ diferentes: CONFORME | HTTP 200; novos registros: 1; PDF: True
+Caso 11 | CPF e CNPJ distintos: CONFORME | HTTP 200; novos registros: 1; PDF: True
+
+EXPERIMENTO 3 - VALIDACAO DA REGRA RNE-007 - LEGALIZE
+Data: 2026-11-08
+Python: 3.14.0 | Django: 6.0.10
+Metodo: requisicoes POST sequenciais via Django Test Client; comparacao de documentos normalizados e persistencia de contratos.
+Ambiente: local; banco de teste temporario SQLite; sem rede HTTP externa.
+Cenarios: 11 | Conformes: 11 | Divergentes: 0
+Registros criados: 3
+Escopo: compara identificadores apos remover pontuacao; NAO verifica digitos de CPF/CNPJ nem identidade real.
+CSV: C:\Users\guilh\OneDrive\Documentos\legalize_corrigido\legalize\evidencias_rne007\resultado_rne007.csv
+

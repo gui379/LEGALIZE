@@ -1,0 +1,63 @@
+Creating test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+Found 1 test(s).
+Operations to perform:
+  Synchronize unmigrated apps: messages, staticfiles
+  Apply all migrations: admin, auth, contenttypes, plataforma, sessions
+Synchronizing apps without migrations:
+  Creating tables...
+    Running deferred SQL...
+Running migrations:
+  Applying contenttypes.0001_initial... OK
+  Applying contenttypes.0002_remove_content_type_name... OK
+  Applying auth.0001_initial... OK
+  Applying auth.0002_alter_permission_name_max_length... OK
+  Applying auth.0003_alter_user_email_max_length... OK
+  Applying auth.0004_alter_user_username_opts... OK
+  Applying auth.0005_alter_user_last_login_null... OK
+  Applying auth.0006_require_contenttypes_0002... OK
+  Applying auth.0007_alter_validators_add_error_messages... OK
+  Applying auth.0008_alter_user_username_max_length... OK
+  Applying auth.0009_alter_user_last_name_max_length... OK
+  Applying auth.0010_alter_group_name_max_length... OK
+  Applying auth.0011_update_proxy_permissions... OK
+  Applying auth.0012_alter_user_first_name_max_length... OK
+  Applying plataforma.0001_initial... OK
+  Applying admin.0001_initial... OK
+  Applying admin.0002_logentry_remove_auto_add... OK
+  Applying admin.0003_logentry_add_action_flag_choices... OK
+  Applying plataforma.0002_clausulatemplate_obrigatoria_cliente_email_contato_and_more... OK
+  Applying plataforma.0003_contratogerado_delete_clausulatemplate_and_more... OK
+  Applying plataforma.0004_contratogerado_alerta_vencimento_enviado_and_more... OK
+  Applying plataforma.0005_remove_contratogerado_alerta_vencimento_enviado_and_more... OK
+  Applying plataforma.0006_contratogerado_deletado_em_and_more... OK
+  Applying sessions.0001_initial...test_50_threads_concorrentes (plataforma.test_experimento_concorrencia.ExperimentoConcorrenciaBanco.test_50_threads_concorrentes) ... ok
+
+----------------------------------------------------------------------
+Ran 1 test in 0.537s
+
+OK
+Destroying test database for alias 'default' ('file:memorydb_default?mode=memory&cache=shared')...
+ OK
+System check identified no issues (0 silenced).
+
+EXPERIMENTO 2 - 50 THREADS CONCORRENTES - LEGALIZE
+Python: 3.14.0 | Django: 6.0.10
+Banco de teste: sqlite | Nome: file:memorydb_default?mode=memory&cache=shared
+Metodo: 50 threads, barreira de inicio, cada uma tenta inserir um contrato distinto.
+Ambiente: Django TransactionTestCase; banco temporario de testes; sem HTTP e sem MySQL.
+Threads iniciadas: 50
+Operacoes bem-sucedidas: 9 | Falhas: 41
+Registros persistidos: 9
+Integridade dos registros bem-sucedidos: OK
+Tempo medio por thread: 22.831 ms
+Tempo total do lote: 0.035 s
+CSV: C:\Users\guilh\OneDrive\Documentos\legalize_corrigido\legalize\evidencias_concorrencia\resultado_50_threads.csv
+OBS: Falhas por database is locked sao possiveis no SQLite e devem ser relatadas.
+OBS: Este teste nao demonstra capacidade de 50 conexoes simultaneas em MySQL.
+
+Amostra de falhas:
+  Thread 1: OperationalError: database table is locked
+  Thread 2: OperationalError: database table is locked
+  Thread 3: OperationalError: database table is locked
+  Thread 4: OperationalError: database table is locked
+  Thread 5: OperationalError: database table is locked
